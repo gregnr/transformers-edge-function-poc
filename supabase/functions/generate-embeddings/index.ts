@@ -9,16 +9,28 @@ import {
 env.useBrowserCache = false;
 env.allowLocalModels = false;
 
-type ProgressCallbackStatus = {
-  status: 'initiate' | 'progress' | 'done' | 'ready';
+type ProgressCallbackValueBase = {
+  status: 'initiate' | 'progress' | 'done';
+  file: string;
 };
+
+type ProgressCallbackValueReady = {
+  status: 'ready';
+};
+
+type ProgressCallbackValue =
+  | ProgressCallbackValueBase
+  | ProgressCallbackValueReady;
 
 performance.mark('pipeline-start');
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
   quantized: true,
-  progress_callback: ({ status }: ProgressCallbackStatus) => {
-    if (status !== 'progress') {
-      performance.mark(`pipeline-${status}`);
+  progress_callback: (value: ProgressCallbackValue) => {
+    if (
+      value.status === 'ready' ||
+      (value.file.endsWith('.onnx') && value.status !== 'progress')
+    ) {
+      performance.mark(`pipeline-${value.status}`);
     }
   },
 });

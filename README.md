@@ -27,3 +27,11 @@ curl -i --location --request POST 'http://localhost:9000/generate-embeddings' \
   --header 'Content-Type: application/json' \
   --data '{"input":"The cat chases the mouse"}'
 ```
+
+## Resource usage
+
+You can monitor the container's resource usage statistics in realtime using `docker stats`:
+
+```shell
+docker stats edge-runtime
+```

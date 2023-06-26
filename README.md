@@ -1,6 +1,6 @@
 # Transformers.js + Supabase Edge Functions
 
-This is a proof of concept testing Transformer.js with Supabase Edge Functions. Executes the `edge-runtime` directly via Docker.
+This is a proof of concept testing Transformer.js with Supabase Edge Functions. Executes the [`edge-runtime`](https://github.com/supabase/edge-runtime) directly via Docker.
 
 ## Start edge runtime server
 

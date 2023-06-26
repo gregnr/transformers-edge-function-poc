@@ -9,9 +9,18 @@ import {
 env.useBrowserCache = false;
 env.allowLocalModels = false;
 
+type ProgressCallbackStatus = {
+  status: 'initiate' | 'progress' | 'done' | 'ready';
+};
+
 performance.mark('pipeline-start');
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
   quantized: true,
+  progress_callback: ({ status }: ProgressCallbackStatus) => {
+    if (status !== 'progress') {
+      performance.mark(`pipeline-${status}`);
+    }
+  },
 });
 performance.mark('pipeline-end');
 
@@ -21,7 +30,21 @@ const pipelineConstructionDuration = performance.measure(
   'pipeline-end'
 );
 
-console.log({ pipelineConstructionDuration });
+const pipelineModelFetchDuration = performance.measure(
+  'pipeline-model-fetch-duration',
+  'pipeline-initiate',
+  'pipeline-done'
+);
+
+const pipelineReadyDuration = performance.measure(
+  'pipeline-ready-duration',
+  'pipeline-done',
+  'pipeline-ready'
+);
+
+console.log('Pipeline model fetch:', pipelineModelFetchDuration);
+console.log('Pipeline ready:', pipelineReadyDuration);
+console.log('Pipeline total:', pipelineConstructionDuration);
 
 serve(async (req) => {
   const { input } = await req.json();
@@ -39,7 +62,7 @@ serve(async (req) => {
     'embedding-end'
   );
 
-  console.log({ embeddingDuration });
+  console.log('Embedding:', embeddingDuration);
 
   const embedding = Array.from(output.data);
 

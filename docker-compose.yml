@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  edge-runtime:
+    image: public.ecr.aws/supabase/edge-runtime:v1.5.1
+    ports:
+      - 9000:9000
+    volumes:
+      - $PWD/supabase/functions:/usr/services
+    command: start --main-service /usr/services
+  debug:
+    image: public.ecr.aws/supabase/edge-runtime:v1.5.1
+    volumes:
+      - $PWD/supabase/functions:/usr/services
+    command: bash
+    entrypoint: []

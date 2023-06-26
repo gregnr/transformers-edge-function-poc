@@ -1,0 +1,8 @@
+{
+  "name": "transformers-edge-function-poc",
+  "version": "0.1.0",
+  "description": "Proof of concept testing Transformer.js with Supabase Edge Functions",
+  "scripts": {
+    "start": "docker compose run --rm --service-ports --name edge-runtime edge-runtime"
+  }
+}
